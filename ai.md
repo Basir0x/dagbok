@@ -5,5 +5,6 @@ Jag har gjort flera korrigeringar i projektet:
 - Rättade fel i `calender.py`, inklusive felaktiga kommandon (`m/l/y/t`) och problem med att lägga till sessioner.
 - Korrigerade dag- och månadshanteringen i `nodelist.py` så att sessioner visas och tas bort korrekt för vald dag.
 - Fixade `parse_duration` i `models.py`.
+Jag - Använde autocomplete/assistans för att snabbt hitta och korrigera fel i kodbasen, samt för att förbättra programflödet och användarvänligheten samt rådgivning. 
 
 Sammantaget fungerar programmet nu som ett komplett kalender- och träningsloggsverktyg.
