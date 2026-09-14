@@ -60,6 +60,14 @@ if __name__ == "__main__":
 
     list = Monthlist()
     list.insert_sorted(Session("kväll", date(2026, 6, 1), 5.0, Duration(1, 30, 45)))
-    list.insert_sorted(Session("morgon", date(2026, 6, 1), 5.0, Duration(1, 30, 45)))
-    list.insert_sorted(Session("eftermiddag", date(2026, 6, 1), 5.0, Duration(1, 30, 45)))
-    
+    list.insert_sorted(Session("morgon", date(2026, 6, 1), 5.0, Duration(1, 10, 0)))
+    list.insert_sorted(Session("eftermiddag", date(2026, 6, 1), 5.0, Duration(1, 23, 34)))
+
+    for s in list.get_all():
+        print(s.when, s.description, s.duration)
+
+    print("day 5:", [s.description for s in list.get_for_day(date(2026, 6, 1))])
+    list.delete(date(2026, 6, 1), 1)
+    print("After deletion:")
+    for s in list.get_all():
+        print(s.when, s.description, s.duration)
