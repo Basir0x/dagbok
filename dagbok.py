@@ -84,16 +84,3 @@ class Dagbok:
             )
             self.add_session(session)
 
-if __name__ == "__main__":
-    from models import Duration, Session
-    from datetime import date
-
-    d = Dagbok()
-    d.add_session(Session("Morning Run", date(2026, 6, 1), 5.0, Duration(1, 30, 45)))
-    print("index september 2026:", d.month_index(2026, 9))
-
-    d.save()
-    d2 = Dagbok()
-    d2.load()
-    for session in d2.get_month(2026, 6).get_all():
-        print(session)

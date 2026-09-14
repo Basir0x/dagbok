@@ -1,3 +1,5 @@
+from datetime import date
+
 from models import Node, Session, Duration
 
 class Monthlist:
@@ -30,7 +32,10 @@ class Monthlist:
     def get_for_day(self, day):
         sessions = []
         for s in self.get_all():
-            if s.when == day:
+            if isinstance(day, date):
+                if s.when == day:
+                    sessions.append(s)
+            elif s.when.day == day:
                 sessions.append(s)
         return sessions
 
@@ -40,7 +45,8 @@ class Monthlist:
         count = 0
 
         while current is not None:
-            if current.session.when == day:
+            match = current.session.when == day if isinstance(day, date) else current.session.when.day == day
+            if match:
                 if count == index:
                     if prev is None:
                         self.head = current.next
@@ -50,7 +56,6 @@ class Monthlist:
                 count += 1
             prev = current
             current = current.next
-
 
         return False
 

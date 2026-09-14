@@ -1,2 +1,4 @@
 # dagbok
-python program to save training session
+python program to save training session.
+
+

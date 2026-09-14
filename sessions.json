@@ -8,5 +8,55 @@
       "minutes": 30,
       "seconds": 45
     }
+  },
+  {
+    "description": "kv\u00e4lls prommenad",
+    "when": "2026-09-14",
+    "distance": 0.9,
+    "duration": {
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 0
+    }
+  },
+  {
+    "description": "Test session",
+    "when": "2026-09-14",
+    "distance": 5.0,
+    "duration": {
+      "hours": 1,
+      "minutes": 0,
+      "seconds": 0
+    }
+  },
+  {
+    "description": "Test session",
+    "when": "2026-09-14",
+    "distance": 5.0,
+    "duration": {
+      "hours": 1,
+      "minutes": 0,
+      "seconds": 0
+    }
+  },
+  {
+    "description": "kv\u00e4lls prommenad",
+    "when": "2026-09-15",
+    "distance": 2.0,
+    "duration": {
+      "hours": 21,
+      "minutes": 34,
+      "seconds": 0
+    }
+  },
+  {
+    "description": "kv\u00e4lls promenad",
+    "when": "2026-09-15",
+    "distance": 1.0,
+    "duration": {
+      "hours": 12,
+      "minutes": 32,
+      "seconds": 23
+    }
   }
 ]
