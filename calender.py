@@ -104,5 +104,46 @@ def day_row(dagbok, year, month, day):
             description, distance, duration = fields
             session = Session(description, date(year, month, day), distance, duration)   
             list.insert_sorted(session)
-            diary.save()    
+            dagbok.save()
+            print("Session added successfully.")
+
+        elif choice == "2":
+            if len(sessions) == 0:
+                print("No sessions to edit.")
+                continue
+            try:
+                n = int(input("Enter session number to edit: ")) - 1
+            except ValueError:
+                print("Invalid input.")
+                continue
+            if n < 0 or n >= len(sessions):
+                print("Invalid session number.")
+                continue
+            fields = read_session(sessions[n])
+            if fields is None:
+                continue
+            description, distance, duration = fields
+            list.delete(day, n)
+            list.insert_sorted(Session(description, date(year, month, day), distance, duration))
+            dagbok.save()
+            print("Session edited successfully.")
+
+        elif choice == "3":
+            if len(sessions) == 0:
+                print("No sessions to delete.")
+                continue
+            try:
+                n = int(input("Enter session number to delete: ")) - 1
+            except ValueError:
+                print("Invalid input.")
+                continue
+            if n < 0 or n >= len(sessions):
+                print("Invalid session number.")
+                continue
+            list.delete(day, n)
+            dagbok.save()
+            print("Session deleted successfully.")
+
+    
+
 
