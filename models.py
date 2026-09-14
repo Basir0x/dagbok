@@ -22,6 +22,22 @@ def parse_duration(text):
     raise ValueError(f"Invalid duration format: {text}")
 
 @dataclass
+class Session:
+    description: str
+    when : date
+    distance: float
+    duration: Duration
+
+@dataclass
+class Node :
+    session: Session
+    next: Node | None = None
+
+if __name__ == "__main__":
+    d = Duration(1, 30, 45)
+    print(d)
+    S = Session("Morning Run", date(2024, 6, 1), 5.0, d)
+    print(S)
 
 
 
