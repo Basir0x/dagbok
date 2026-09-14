@@ -18,3 +18,48 @@ class Monthlist:
 
         new_node.next = current.next
         current.next = new_node
+
+    def get_all(self):
+        results = []
+        current = self.head
+        while current is not None:
+            results.append(current.session)
+            current = current.next
+        return results
+
+    def get_for_day(self, day):
+        sessions = []
+        for s in self.get_all():
+            if s.when == day:
+                sessions.append(s)
+        return sessions
+
+    def delete(self, day, index):
+        current = self.head
+        prev = None
+        count = 0
+
+        while current is not None:
+            if current.session.when == day:
+                if count == index:
+                    if prev is None:
+                        self.head = current.next
+                    else:
+                        prev.next = current.next
+                    return True
+                count += 1
+            prev = current
+            current = current.next
+
+
+        return False
+
+if __name__ == "__main__":
+    from datetime import date
+    from models import Duration, Session
+
+    list = Monthlist()
+    list.insert_sorted(Session("kväll", date(2026, 6, 1), 5.0, Duration(1, 30, 45)))
+    list.insert_sorted(Session("morgon", date(2026, 6, 1), 5.0, Duration(1, 30, 45)))
+    list.insert_sorted(Session("eftermiddag", date(2026, 6, 1), 5.0, Duration(1, 30, 45)))
+    
