@@ -14,7 +14,7 @@ class Duration:
         return f"{self.minutes:02}:{self.seconds:02}"
 
 def parse_duration(text):
-    parts = text.trip().split(':')
+    parts = text.strip().split(':')
     if len(parts) == 2:
         return Duration(0, int(parts[0]), int(parts[1]))
     if len(parts) == 3:

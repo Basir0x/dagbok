@@ -1,0 +1,12 @@
+[
+  {
+    "description": "Morning Run",
+    "when": "2026-06-01",
+    "distance": 5.0,
+    "duration": {
+      "hours": 1,
+      "minutes": 30,
+      "seconds": 45
+    }
+  }
+]

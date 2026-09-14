@@ -38,8 +38,8 @@ class Dagbok:
 
     def save(self):
         data = []
-        for list in self.months:
-            for session in list.get_all():
+        for month in self.months:
+            for session in month.get_all():
                 data.append({
                     "description": session.description,
                     "when": session.when.isoformat(),
@@ -50,5 +50,50 @@ class Dagbok:
                         "seconds": session.duration.seconds
                     }
                 })
-            with open(save_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=2)
+
+        with open(save_file, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+
+    def load(self):
+        if not save_file.exists():
+            return
+
+        self.months = []
+        for _ in range(number_of_months):
+            self.months.append(Monthlist())
+
+        try:
+            with open(save_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception:
+            print("Error loading sessions from file.")
+            return
+
+        for row in data:
+            d = date.fromisoformat(row["when"])
+            duration = Duration(
+                row["duration"]["hours"],
+                row["duration"]["minutes"],
+                row["duration"]["seconds"]
+            )
+            session = Session(
+                row["description"],
+                d,
+                float(row["distance"]),
+                duration
+            )
+            self.add_session(session)
+
+if __name__ == "__main__":
+    from models import Duration, Session
+    from datetime import date
+
+    d = Dagbok()
+    d.add_session(Session("Morning Run", date(2026, 6, 1), 5.0, Duration(1, 30, 45)))
+    print("index september 2026:", d.month_index(2026, 9))
+
+    d.save()
+    d2 = Dagbok()
+    d2.load()
+    for session in d2.get_month(2026, 6).get_all():
+        print(session)
