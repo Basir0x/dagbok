@@ -1,4 +1,5 @@
 import calendar
+import math
 from datetime import date
 
 from dagbok import Dagbok, end_year, from_year
@@ -105,7 +106,19 @@ def read_session(old=None):
             print(e)
             return None
 
-    return description, distance, duration
+    if old is None:
+        tag = input(
+            "Enter session tag (e.g. rainy, sunny, blizzard, flat, mountain, hilly, asphalt): "
+        ).strip()
+        if not tag:
+            print("Tag cannot be empty.")
+            return None
+    else:
+        tag = input(f"Tag [{old.tag}]: ").strip()
+        if not tag:
+            tag = old.tag
+
+    return description, distance, duration, tag
 
 
 def day_row(dagbok, year, month, day):
@@ -123,7 +136,7 @@ def day_row(dagbok, year, month, day):
             print("No sessions for this day.")
         else:
             for i, s in enumerate(sessions, start=1):
-                print(f"{i}. {s.description} - {s.distance} km - {s.duration}")
+                print(f"{i}. {s.description} - {s.distance} km - {s.duration} - {s.tag}")
 
         print("1. Add session 2. Edit session 3. Delete session 4. Back to calendar")
         choice = input("Choose an option: ").strip()
@@ -135,9 +148,9 @@ def day_row(dagbok, year, month, day):
             fields = read_session()
             if fields is None:
                 continue
-            description, distance, duration = fields
-            session = Session(description, date(year, month, day), distance, duration)
-            monthlist.insert_sorted(session)
+            description, distance, duration, tag = fields
+            session = Session(description, date(year, month, day), distance, duration, tag)
+            dagbok.add_session(session)
             dagbok.save()
             print("Session added successfully.")
 
@@ -156,9 +169,9 @@ def day_row(dagbok, year, month, day):
             fields = read_session(sessions[n])
             if fields is None:
                 continue
-            description, distance, duration = fields
-            monthlist.delete(day, n)
-            monthlist.insert_sorted(Session(description, date(year, month, day), distance, duration))
+            description, distance, duration, tag = fields
+            dagbok.remove_session(sessions[n])
+            dagbok.add_session(Session(description, date(year, month, day), distance, duration, tag))
             dagbok.save()
             print("Session edited successfully.")
 
@@ -174,12 +187,124 @@ def day_row(dagbok, year, month, day):
             if n < 0 or n >= len(sessions):
                 print("Invalid session number.")
                 continue
-            monthlist.delete(day, n)
+            dagbok.remove_session(sessions[n])
             dagbok.save()
             print("Session deleted successfully.")
 
         else:
             print("Invalid option. Please try again.")
+
+def search_sessions(dagbok):
+    try:
+        start = date.fromisoformat(input("Start date (YYYY-MM-DD): ").strip())
+        end = date.fromisoformat(input("End date (YYYY-MM-DD): ").strip())
+    except ValueError:
+        print("Invalid date. Please use YYYY-MM-DD.")
+        return
+
+    if start > end:
+        print("Start date must not be after end date.")
+        return
+
+    if start.year < from_year or start.year > end_year:
+        print(f"Dates must be between {from_year} and {end_year}.")
+        return
+
+    if end.year < from_year or end.year > end_year:
+        print(f"Dates must be between {from_year} and {end_year}.")
+        return
+
+    matches = dagbok.get_sessions_in_date_range(start, end)
+
+    if not matches:
+        print("No sessions found in that date range.")
+        return
+
+    print(f"Sessions from {start} to {end}:")
+    for session in matches:
+        print(
+            f"{session.when} - {session.description} - "
+            f"{session.distance} km - {session.duration} - {session.tag}"
+        )
+
+
+def delete_sessions_by_date_range(dagbok):
+    try:
+        start = date.fromisoformat(input("Start date (YYYY-MM-DD): ").strip())
+        end = date.fromisoformat(input("End date (YYYY-MM-DD): ").strip())
+    except ValueError:
+        print("Invalid date. Please use YYYY-MM-DD.")
+        return
+
+    if start > end:
+        print("Start date must not be after end date.")
+        return
+
+    if not (from_year <= start.year <= end_year and from_year <= end.year <= end_year):
+        print(f"Dates must be between {from_year} and {end_year}.")
+        return
+
+    confirmation = input(
+        f"Delete all sessions from {start} through {end}? (y/n): "
+    ).strip().lower()
+    if confirmation != "y":
+        print("Deletion cancelled.")
+        return
+
+    deleted_count = dagbok.delete_sessions_in_date_range(start, end)
+    if deleted_count == 0:
+        print("No sessions found in that date range.")
+        return
+
+    dagbok.save()
+    print(f"Deleted {deleted_count} session(s).")
+
+
+def search_sessions_by_tag(dagbok):
+    tag = input("Enter tag to search for: ").strip()
+    if not tag:
+        print("Tag cannot be empty.")
+        return
+
+    matches = dagbok.get_sessions_by_tag(tag)
+    if not matches:
+        print(f'No sessions found with tag "{tag}".')
+        return
+
+    print(f'Sessions tagged "{tag}":')
+    for session in matches:
+        print(
+            f"{session.when} - {session.description} - "
+            f"{session.distance} km - {session.duration} - {session.tag}"
+        )
+
+
+def search_sessions_by_distance(dagbok):
+    try:
+        minimum = float(input("Minimum distance in km: ").strip().replace(",", "."))
+        maximum = float(input("Maximum distance in km: ").strip().replace(",", "."))
+    except ValueError:
+        print("Invalid distance. Enter a number, for example 7 or 10.5.")
+        return
+
+    if not math.isfinite(minimum) or not math.isfinite(maximum) or minimum < 0 or maximum < 0:
+        print("Distances must be finite, non-negative numbers.")
+        return
+    if minimum > maximum:
+        print("Minimum distance must not be greater than maximum distance.")
+        return
+
+    matches = dagbok.get_sessions_in_distance_range(minimum, maximum)
+    if not matches:
+        print(f"No sessions found between {minimum:g} and {maximum:g} km.")
+        return
+
+    print(f"Sessions between {minimum:g} and {maximum:g} km:")
+    for session in matches:
+        print(
+            f"{session.when} - {session.description} - "
+            f"{session.distance:g} km - {session.duration} - {session.tag}"
+        )
 
 
 def main():
@@ -200,6 +325,10 @@ def main():
         print_calendar(year, month, selected_day)
         print("=" * 34)
         print("n = next day, p = previous day")
+        print("s = search sessions by date range")
+        print("g = search sessions by tag")
+        print("d = search sessions by distance range")
+        print("r = delete sessions in date range")
         print("m = next month, l = previous month")
         print("y = next year, t = previous year")
         print("u = show/add/edit sessions for selected day")
@@ -241,6 +370,14 @@ def main():
             selected_day = last_day(year, month)
         elif cmd == "u":
             day_row(dagbok, year, month, selected_day)
+        elif cmd == "s":
+            search_sessions(dagbok)
+        elif cmd == "g":
+            search_sessions_by_tag(dagbok)
+        elif cmd == "d":
+            search_sessions_by_distance(dagbok)
+        elif cmd == "r":
+            delete_sessions_by_date_range(dagbok)
         else:
             print("Invalid command. Please try again.")
 

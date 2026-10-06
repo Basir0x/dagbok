@@ -7,7 +7,8 @@
       "hours": 1,
       "minutes": 30,
       "seconds": 45
-    }
+    },
+    "tag": "untagged"
   },
   {
     "description": "kv\u00e4lls prommenad",
@@ -17,7 +18,8 @@
       "hours": 0,
       "minutes": 0,
       "seconds": 0
-    }
+    },
+    "tag": "untagged"
   },
   {
     "description": "Test session",
@@ -27,7 +29,8 @@
       "hours": 1,
       "minutes": 0,
       "seconds": 0
-    }
+    },
+    "tag": "untagged"
   },
   {
     "description": "Test session",
@@ -37,17 +40,8 @@
       "hours": 1,
       "minutes": 0,
       "seconds": 0
-    }
-  },
-  {
-    "description": "kv\u00e4lls prommenad",
-    "when": "2026-09-15",
-    "distance": 2.0,
-    "duration": {
-      "hours": 21,
-      "minutes": 34,
-      "seconds": 0
-    }
+    },
+    "tag": "untagged"
   },
   {
     "description": "kv\u00e4lls promenad",
@@ -57,6 +51,18 @@
       "hours": 12,
       "minutes": 32,
       "seconds": 23
-    }
+    },
+    "tag": "untagged"
+  },
+  {
+    "description": "kv\u00e4lls prommenad",
+    "when": "2026-09-15",
+    "distance": 2.0,
+    "duration": {
+      "hours": 21,
+      "minutes": 34,
+      "seconds": 0
+    },
+    "tag": "untagged"
   }
 ]

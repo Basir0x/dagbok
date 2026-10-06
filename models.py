@@ -27,6 +27,7 @@ class Session:
     when : date
     distance: float
     duration: Duration
+    tag: str
 
 @dataclass
 class Node :
@@ -36,7 +37,7 @@ class Node :
 if __name__ == "__main__":
     d = Duration(1, 30, 45)
     print(d)
-    S = Session("Morning Run", date(2024, 6, 1), 5.0, d)
+    S = Session("Morning Run", date(2024, 6, 1), 5.0, d, "running")
     print(S)
 
 

@@ -1,5 +1,4 @@
 from datetime import date
-
 from models import Node, Session, Duration
 
 class Monthlist:
@@ -28,6 +27,46 @@ class Monthlist:
             results.append(current.session)
             current = current.next
         return results
+
+    def get_in_date_range(self, start, end):
+        matches = []
+        current = self.head
+
+        while current is not None:
+            session_date = current.session.when
+
+            if session_date > end:
+                break
+
+            if session_date >= start:
+                matches.append(current.session)
+
+            current = current.next
+
+        return matches
+
+    def delete_in_date_range(self, start, end):
+        deleted = []
+        current = self.head
+        previous = None
+
+        while current is not None:
+            session_date = current.session.when
+            if session_date > end:
+                break
+
+            if session_date >= start:
+                deleted.append(current.session)
+                if previous is None:
+                    self.head = current.next
+                else:
+                    previous.next = current.next
+                current = current.next
+            else:
+                previous = current
+                current = current.next
+
+        return deleted
 
     def get_for_day(self, day):
         sessions = []
@@ -64,9 +103,9 @@ if __name__ == "__main__":
     from models import Duration, Session
 
     list = Monthlist()
-    list.insert_sorted(Session("kväll", date(2026, 6, 1), 5.0, Duration(1, 30, 45)))
-    list.insert_sorted(Session("morgon", date(2026, 6, 1), 5.0, Duration(1, 10, 0)))
-    list.insert_sorted(Session("eftermiddag", date(2026, 6, 1), 5.0, Duration(1, 23, 34)))
+    list.insert_sorted(Session("kväll", date(2026, 6, 1), 5.0, Duration(1, 30, 45), "hilly"))
+    list.insert_sorted(Session("morgon", date(2026, 6, 1), 5.0, Duration(1, 10, 0), "asphalt"))
+    list.insert_sorted(Session("eftermiddag", date(2026, 6, 1), 5.0, Duration(1, 23, 34), "rainy"))
 
     for s in list.get_all():
         print(s.when, s.description, s.duration)
